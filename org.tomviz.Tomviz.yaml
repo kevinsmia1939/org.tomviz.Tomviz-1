@@ -98,8 +98,8 @@ modules:
       - python3 setup.py install --prefix=${FLATPAK_DEST} --root=/ --optimize=1
     sources:
       - type: archive
-        url: https://files.pythonhosted.org/packages/5f/d6/ad58ded26556eaeaa8c971e08b6466f17c4ac4d786cd3d800e26ce59cc01/numpy-1.21.3.zip
-        sha256: 63571bb7897a584ca3249c86dd01c10bcb5fe4296e3568b2e9c1a55356b6410e
+        url: https://files.pythonhosted.org/packages/fb/48/b0708ebd7718a8933f0d3937513ef8ef2f4f04529f1f66ca86d873043921/numpy-1.21.4.zip
+        sha256: e6c76a87633aa3fa16614b61ccedfae45b91df2767cf097aa9c933932a7ed1e0
         x-checker-data:
           type: pypi
           name: numpy
@@ -117,8 +117,8 @@ modules:
         LDFLAGS: -shared
     sources:
       - type: archive
-        url: https://files.pythonhosted.org/packages/47/33/a24aec22b7be7fdb10ec117a95e1e4099890d8bbc6646902f443fc7719d1/scipy-1.7.1.tar.gz
-        sha256: 6b47d5fa7ea651054362561a28b1ccc8da9368a39514c1bbf6c0977a1c376764
+        url: https://files.pythonhosted.org/packages/0e/23/58c4f995475a2a97cb5f4a032aedaf881ad87cd976a7180c55118d105a1d/scipy-1.7.2.tar.gz
+        sha256: fa2dbabaaecdb502641b0b3c00dec05fb475ae48655c66da16c9ed24eda1e711
         x-checker-data:
           type: pypi
           name: scipy
