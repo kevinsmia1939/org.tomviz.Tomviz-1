@@ -176,8 +176,8 @@ modules:
       - python3 setup.py install --prefix=/app --root=/ --optimize=1
     sources:
       - type: archive
-        url: https://files.pythonhosted.org/packages/4b/38/6f9539d274d02fbc3262e2f9a0c9dbac9b53393b3ed935612993f8df54bf/pyFFTW-0.12.0.tar.gz
-        sha256: 60988e823ca75808a26fd79d88dbae1de3699e72a293f812aa4534f8a0a58cb0
+        url: https://files.pythonhosted.org/packages/18/a1/5eb99c183af0a49bf632fed3260a6cad3f7978bb19fd661a573d3728a986/pyFFTW-0.13.0.tar.gz
+        sha256: da85102405c0bd95d57eb19e99b01a0729d8406cb204c3900894b873784253da
         x-checker-data:
           type: pypi
           name: pyFFTW
