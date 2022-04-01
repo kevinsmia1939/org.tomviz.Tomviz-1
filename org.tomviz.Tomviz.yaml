@@ -232,8 +232,8 @@ modules:
       - -DGDCM_BUILD_DOCBOOK_MANPAGES:BOOL=OFF
     sources:
       - type: archive
-        url: https://github.com/malaterre/GDCM/archive/v3.0.11.tar.gz
-        sha256: d3307f201951d112e3e0ffe8bc0a4d6c756af9905834c8320dfa7ae9b7070a93
+        url: https://github.com/malaterre/GDCM/archive/v3.0.12.tar.gz
+        sha256: 4709ee5acce9ee69727bc8664ef7a13f4a3bbb8d48d1c3a0468241d0ac1ac977
         x-checker-data:
           type: anitya
           project-id: 883
