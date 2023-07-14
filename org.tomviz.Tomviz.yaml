@@ -25,6 +25,16 @@ modules:
   - shared-modules/glew/glew.json
   - shared-modules/linux-audio/fftw3f.json
 
+  - name: meson
+    buildsystem: simple
+    build-commands:
+      - python3 setup.py build
+      - python3 setup.py install --prefix=/app --root=/
+    sources:
+      - type: git
+        url: https://github.com/mesonbuild/meson.git
+        tag: 1.1.1
+
     #cmake-ninja does not work
   - name: CastXML
     buildsystem: cmake
@@ -33,8 +43,8 @@ modules:
       - -DLLVM_DIR=/usr/lib/sdk/llvm11/lib/cmake/llvm
     sources:
       - type: archive
-        url: https://github.com/CastXML/CastXML/archive/v0.4.5.tar.gz
-        sha256: 007f6d073165e150df0e40e1ec331f6f94304684af9eed3b0e5dabaebcfb1197
+        url: https://github.com/CastXML/CastXML/archive/v0.6.1.tar.gz
+        sha256: 7a2e5ae99c66b5b44e682f261248cd874fdd7554f4a24fc31d09ac5b6dcde7e5
         x-checker-data:
           type: anitya
           project-id: 9347
@@ -69,8 +79,8 @@ modules:
       - -DCBLAS=ON
     sources:
       - type: archive
-        url: https://github.com/Reference-LAPACK/lapack/archive/refs/tags/v3.10.1.tar.gz
-        sha256: cd005cd021f144d7d5f7f33c943942db9f03a28d110d6a3b80d718a295f7f714
+        url: https://github.com/Reference-LAPACK/lapack/archive/refs/tags/v3.11.0.tar.gz
+        sha256: 4b9ba79bfd4921ca820e83979db76ab3363155709444a787979e81c22285ffa9
         x-checker-data:
           type: anitya
           project-id: 1534
@@ -79,116 +89,118 @@ modules:
     cleanup:
       - /lib/cmake
 
-  - name: pybind11
-    buildsystem: simple
-    build-commands:
-      - python3.8 setup.py build
-      - cmake -DPYBIND11_INSTALL=ON -DPYBIND11_TEST=OFF .
-      - cmake --build .
-      - python3.8 setup.py install --skip-build --force --prefix=/app
-    sources:
-      - type: archive
-        url: https://github.com/pybind/pybind11/archive/v2.6.2.tar.gz
-        sha256: 8ff2fff22df038f5cd02cea8af56622bc67f5b64534f1b83b9f133b8366acff2
+      # python3 flatpak-pip-generator tomli setuptools_scm_git_archive setuptools_scm pybind11 numpy certifi pyparsing packaging cppy meson-python pythran scipy pyFFTW -o python_deps
+  - python_deps.json
+  # - name: pybind11
+  #   buildsystem: simple
+  #   build-commands:
+  #     - python3.8 setup.py build
+  #     - cmake -DPYBIND11_INSTALL=ON -DPYBIND11_TEST=OFF .
+  #     - cmake --build .
+  #     - python3.8 setup.py install --skip-build --force --prefix=/app
+  #   sources:
+  #     - type: archive
+  #       url: https://github.com/pybind/pybind11/archive/v2.6.2.tar.gz
+  #       sha256: 8ff2fff22df038f5cd02cea8af56622bc67f5b64534f1b83b9f133b8366acff2
 
-  - name: python-numpy
-    buildsystem: simple
-    build-commands:
-      - rm pyproject.toml
-      - python3 setup.py install --prefix=${FLATPAK_DEST} --root=/ --optimize=1
-    sources:
-      - type: archive
-        url: https://files.pythonhosted.org/packages/64/4a/b008d1f8a7b9f5206ecf70a53f84e654707e7616a771d84c05151a4713e9/numpy-1.22.3.zip
-        sha256: dbc7601a3b7472d559dc7b933b18b4b66f9aa7452c120e87dfb33d02008c8a18
-        x-checker-data:
-          type: pypi
-          name: numpy
+  # - name: python-numpy
+  #   buildsystem: simple
+  #   build-commands:
+  #     - rm pyproject.toml
+  #     - python3 setup.py install --prefix=${FLATPAK_DEST} --root=/ --optimize=1
+  #   sources:
+  #     - type: archive
+  #       url: https://files.pythonhosted.org/packages/64/4a/b008d1f8a7b9f5206ecf70a53f84e654707e7616a771d84c05151a4713e9/numpy-1.22.3.zip
+  #       sha256: dbc7601a3b7472d559dc7b933b18b4b66f9aa7452c120e87dfb33d02008c8a18
+  #       x-checker-data:
+  #         type: pypi
+  #         name: numpy
 
-  - name: python-scipy
-    buildsystem: simple
-    build-commands:
-      - python3 setup.py build -j 0
-      - python3 setup.py install --prefix=/app --root=/ --optimize=1
-    build-options:
-      env:
-        ATLAS: None
-        BLAS: /app/lib
-        LAPACK: /app/lib
-        LDFLAGS: -shared
-    sources:
-      - type: archive
-        url: https://files.pythonhosted.org/packages/b4/a2/4faa34bf0cdbefd5c706625f1234987795f368eb4e97bde9d6f46860843e/scipy-1.8.0.tar.gz
-        sha256: 31d4f2d6b724bc9a98e527b5849b8a7e589bf1ea630c33aa563eda912c9ff0bd
-        x-checker-data:
-          type: pypi
-          name: scipy
-    modules:
-      - name: python-gast
-        buildsystem: simple
-        build-commands:
-          - python3 setup.py install --prefix=${FLATPAK_DEST} --root=/ --optimize=1
-        sources:
-          - type: archive
-            url: https://files.pythonhosted.org/packages/48/a3/0bd844c54ae8141642088b7ae09dd38fec2ec7faa9b7d25bb6a23c1f266f/gast-0.5.3.tar.gz
-            sha256: cfbea25820e653af9c7d1807f659ce0a0a9c64f2439421a7bba4f0983f532dea
-            x-checker-data:
-              type: pypi
-              name: gast
-      - name: python-pythran
-        buildsystem: simple
-        build-commands:
-          - python3 setup.py install --prefix=${FLATPAK_DEST} --root=/ --optimize=1
-        sources:
-          - type: archive
-            url: https://files.pythonhosted.org/packages/c6/e6/986a967dcca91d89e36f4d4a2f69a052030bce01a7cd48a6b7fba1a50189/pythran-0.9.12.post1.tar.gz
-            sha256: e7589cf83b0befa9a1b55e98223caf89aff887d9e3f14be912cf8703a717f185
-          - type: patch
-            path: remove_pytest-runner.patch
-            x-checker-data:
-              type: pypi
-              name: pythran
-      - name: python-beniget
-        buildsystem: simple
-        build-commands:
-          - python3 setup.py install --prefix=${FLATPAK_DEST} --root=/ --optimize=1
-        sources:
-          - type: archive
-            url: https://files.pythonhosted.org/packages/14/e7/50cbac38f77eca8efd39516be6651fdb9f3c4c0fab8cf2cf05f612578737/beniget-0.4.1.tar.gz
-            sha256: 75554b3b8ad0553ce2f607627dad3d95c60c441189875b98e097528f8e23ac0c
-            x-checker-data:
-              type: pypi
-              name: beniget
-      - name: python-ply
-        buildsystem: simple
-        build-commands:
-          - python3 setup.py install --prefix=${FLATPAK_DEST} --root=/ --optimize=1
-        sources:
-          - type: archive
-            url: https://files.pythonhosted.org/packages/e5/69/882ee5c9d017149285cab114ebeab373308ef0f874fcdac9beb90e0ac4da/ply-3.11.tar.gz
-            sha256: 00c7c1aaa88358b9c765b6d3000c6eec0ba42abca5351b095321aef446081da3
-            x-checker-data:
-              type: pypi
-              name: ply
+  # - name: python-scipy
+  #   buildsystem: simple
+  #   build-commands:
+  #     - python3 setup.py build -j 0
+  #     - python3 setup.py install --prefix=/app --root=/ --optimize=1
+  #   build-options:
+  #     env:
+  #       ATLAS: None
+  #       BLAS: /app/lib
+  #       LAPACK: /app/lib
+  #       LDFLAGS: -shared
+  #   sources:
+  #     - type: archive
+  #       url: https://files.pythonhosted.org/packages/b4/a2/4faa34bf0cdbefd5c706625f1234987795f368eb4e97bde9d6f46860843e/scipy-1.8.0.tar.gz
+  #       sha256: 31d4f2d6b724bc9a98e527b5849b8a7e589bf1ea630c33aa563eda912c9ff0bd
+  #       x-checker-data:
+  #         type: pypi
+  #         name: scipy
+  #   modules:
+  #     - name: python-gast
+  #       buildsystem: simple
+  #       build-commands:
+  #         - python3 setup.py install --prefix=${FLATPAK_DEST} --root=/ --optimize=1
+  #       sources:
+  #         - type: archive
+  #           url: https://files.pythonhosted.org/packages/48/a3/0bd844c54ae8141642088b7ae09dd38fec2ec7faa9b7d25bb6a23c1f266f/gast-0.5.3.tar.gz
+  #           sha256: cfbea25820e653af9c7d1807f659ce0a0a9c64f2439421a7bba4f0983f532dea
+  #           x-checker-data:
+  #             type: pypi
+  #             name: gast
+  #     - name: python-pythran
+  #       buildsystem: simple
+  #       build-commands:
+  #         - python3 setup.py install --prefix=${FLATPAK_DEST} --root=/ --optimize=1
+  #       sources:
+  #         - type: archive
+  #           url: https://files.pythonhosted.org/packages/c6/e6/986a967dcca91d89e36f4d4a2f69a052030bce01a7cd48a6b7fba1a50189/pythran-0.9.12.post1.tar.gz
+  #           sha256: e7589cf83b0befa9a1b55e98223caf89aff887d9e3f14be912cf8703a717f185
+  #         - type: patch
+  #           path: remove_pytest-runner.patch
+  #           x-checker-data:
+  #             type: pypi
+  #             name: pythran
+  #     - name: python-beniget
+  #       buildsystem: simple
+  #       build-commands:
+  #         - python3 setup.py install --prefix=${FLATPAK_DEST} --root=/ --optimize=1
+  #       sources:
+  #         - type: archive
+  #           url: https://files.pythonhosted.org/packages/14/e7/50cbac38f77eca8efd39516be6651fdb9f3c4c0fab8cf2cf05f612578737/beniget-0.4.1.tar.gz
+  #           sha256: 75554b3b8ad0553ce2f607627dad3d95c60c441189875b98e097528f8e23ac0c
+  #           x-checker-data:
+  #             type: pypi
+  #             name: beniget
+  #     - name: python-ply
+  #       buildsystem: simple
+  #       build-commands:
+  #         - python3 setup.py install --prefix=${FLATPAK_DEST} --root=/ --optimize=1
+  #       sources:
+  #         - type: archive
+  #           url: https://files.pythonhosted.org/packages/e5/69/882ee5c9d017149285cab114ebeab373308ef0f874fcdac9beb90e0ac4da/ply-3.11.tar.gz
+  #           sha256: 00c7c1aaa88358b9c765b6d3000c6eec0ba42abca5351b095321aef446081da3
+  #           x-checker-data:
+  #             type: pypi
+  #             name: ply
 
-  - name: python-FFTW
-    buildsystem: simple
-    build-commands:
-      - python3 setup.py install --prefix=/app --root=/ --optimize=1
-    sources:
-      - type: archive
-        url: https://files.pythonhosted.org/packages/18/a1/5eb99c183af0a49bf632fed3260a6cad3f7978bb19fd661a573d3728a986/pyFFTW-0.13.0.tar.gz
-        sha256: da85102405c0bd95d57eb19e99b01a0729d8406cb204c3900894b873784253da
-        x-checker-data:
-          type: pypi
-          name: pyFFTW
+  # - name: python-FFTW
+  #   buildsystem: simple
+  #   build-commands:
+  #     - python3 setup.py install --prefix=/app --root=/ --optimize=1
+  #   sources:
+  #     - type: archive
+  #       url: https://files.pythonhosted.org/packages/18/a1/5eb99c183af0a49bf632fed3260a6cad3f7978bb19fd661a573d3728a986/pyFFTW-0.13.0.tar.gz
+  #       sha256: da85102405c0bd95d57eb19e99b01a0729d8406cb204c3900894b873784253da
+  #       x-checker-data:
+  #         type: pypi
+  #         name: pyFFTW
 
   - name: TBB
     buildsystem: cmake
     builddir: true
     sources:
       - type: archive
-        url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.5.0.tar.gz
-        sha256: e5b57537c741400cf6134b428fc1689a649d7d38d9bb9c1b6d64f092ea28178a
+        url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.9.0.tar.gz
+        sha256: 1ce48f34dada7837f510735ff1172f6e2c261b09460e3bf773b49791d247d24e
         x-checker-data:
           type: anitya
           project-id: 227581
@@ -208,8 +220,8 @@ modules:
       - --without-ruby
     sources:
       - type: archive
-        url: https://sourceforge.net/projects/swig/files/swig/swig-4.0.2/swig-4.0.2.tar.gz
-        sha256: d53be9730d8d58a16bf0cbd1f8ac0c0c3e1090573168bfa151b01eb47fa906fc
+        url: https://sourceforge.net/projects/swig/files/swig/swig-4.1.1/swig-4.1.1.tar.gz
+        sha256: 2af08aced8fcd65cdb5cc62426768914bedc735b1c250325203716f78e39ac9b
         x-checker-data:
           type: anitya
           project-id: 4919
@@ -232,8 +244,8 @@ modules:
       - -DGDCM_BUILD_DOCBOOK_MANPAGES:BOOL=OFF
     sources:
       - type: archive
-        url: https://github.com/malaterre/GDCM/archive/v3.0.12.tar.gz
-        sha256: 4709ee5acce9ee69727bc8664ef7a13f4a3bbb8d48d1c3a0468241d0ac1ac977
+        url: https://github.com/malaterre/GDCM/archive/v3.0.21.tar.gz
+        sha256: 7c456162a2de722cc90e3bdc46900302b1c367540a7131268d7bfd2a819cb5ed
         x-checker-data:
           type: anitya
           project-id: 883
@@ -312,8 +324,8 @@ modules:
       - -DITK_FORBID_DOWNLOADS=ON
     sources:
       - type: archive
-        url: https://github.com/InsightSoftwareConsortium/ITK/archive/refs/tags/v5.2.1.tar.gz
-        sha256: 6022b2b64624b8bcec3333fe48d5f74ff6ebceb3bdf98258ba7d7fbbc76b99ab
+        url: https://github.com/InsightSoftwareConsortium/ITK/archive/refs/tags/v5.3.0.tar.gz
+        sha256: 64e7e8094a5023c8f68ee042459d6319581fadb35e2fe90a4ae230ce36369db1
         x-checker-data:
           type: anitya
           project-id: 223473
