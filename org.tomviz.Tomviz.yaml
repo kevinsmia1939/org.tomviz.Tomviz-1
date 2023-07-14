@@ -1,11 +1,11 @@
 app-id: org.tomviz.Tomviz
 runtime: org.kde.Platform
 sdk: org.kde.Sdk
-runtime-version: '5.15'
+runtime-version: '5.15-22.08'
 command: tomviz
 #For CastXML
 sdk-extensions:
-  - org.freedesktop.Sdk.Extension.llvm11
+  - org.freedesktop.Sdk.Extension.llvm16
 # GLEW does not support Wayland yet.
 finish-args:
   - --share=ipc
@@ -40,7 +40,7 @@ modules:
     buildsystem: cmake
     config-opts:
       - -DCLANG_LINK_CLANG_DYLIB:BOOL=ON
-      - -DLLVM_DIR=/usr/lib/sdk/llvm11/lib/cmake/llvm
+      - -DLLVM_DIR=/usr/lib/sdk/llvm16/lib/cmake/llvm
     sources:
       - type: archive
         url: https://github.com/CastXML/CastXML/archive/v0.6.1.tar.gz
@@ -68,26 +68,47 @@ modules:
     cleanup:
       - '*'
 
-  - name: lapack
-    buildsystem: cmake-ninja
-    builddir: true
-    config-opts:
-      - -DCMAKE_BUILD_TYPE=Release
-      - -DBUILD_SHARED_LIBS=ON
-      - -DBUILD_TESTING=OFF
-      - -DLAPACKE=ON
-      - -DCBLAS=ON
+  - name: openblas # dependency for scipy
+    no-autogen: true
+    make-args:
+      - DYNAMIC_ARCH=1
+      - DYNAMIC_OLDER=1
+      - FC=gfortran
+      - NO_CBLAS=1
+      - NO_LAPACKE=1
+      - TARGET=GENERIC
+      - USE_OPENMP=0    # OpenMP off by default, this hack skips 'test_fork' which crashes on i386
+    make-install-args:
+      - PREFIX=/app
     sources:
       - type: archive
-        url: https://github.com/Reference-LAPACK/lapack/archive/refs/tags/v3.11.0.tar.gz
-        sha256: 4b9ba79bfd4921ca820e83979db76ab3363155709444a787979e81c22285ffa9
+        url: https://github.com/xianyi/OpenBLAS/archive/v0.3.23.tar.gz
+        sha256: 5d9491d07168a5d00116cdc068a40022c3455bf9293c7cb86a65b1054d7e5114
         x-checker-data:
           type: anitya
-          project-id: 1534
-          stable-only: true
-          url-template: https://github.com/Reference-LAPACK/lapack/archive/refs/tags/v$version.tar.gz
-    cleanup:
-      - /lib/cmake
+          project-id: 2540
+          url-template: https://github.com/xianyi/OpenBLAS/archive/v$version.tar.gz
+
+  # - name: lapack
+  #   buildsystem: cmake-ninja
+  #   builddir: true
+  #   config-opts:
+  #     - -DCMAKE_BUILD_TYPE=Release
+  #     - -DBUILD_SHARED_LIBS=ON
+  #     - -DBUILD_TESTING=OFF
+  #     - -DLAPACKE=ON
+  #     - -DCBLAS=ON
+  #   sources:
+  #     - type: archive
+  #       url: https://github.com/Reference-LAPACK/lapack/archive/refs/tags/v3.11.0.tar.gz
+  #       sha256: 4b9ba79bfd4921ca820e83979db76ab3363155709444a787979e81c22285ffa9
+  #       x-checker-data:
+  #         type: anitya
+  #         project-id: 1534
+  #         stable-only: true
+  #         url-template: https://github.com/Reference-LAPACK/lapack/archive/refs/tags/v$version.tar.gz
+  #   cleanup:
+  #     - /lib/cmake
 
       # python3 flatpak-pip-generator tomli setuptools_scm_git_archive setuptools_scm pybind11 numpy certifi pyparsing packaging cppy meson-python pythran scipy pyFFTW -o python_deps
   - python_deps.json
@@ -197,6 +218,8 @@ modules:
   - name: TBB
     buildsystem: cmake
     builddir: true
+    config-opts:
+      - -DTBB_TEST=OFF
     sources:
       - type: archive
         url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.9.0.tar.gz
@@ -256,7 +279,7 @@ modules:
 
     #Paraview need 32GB of memory to build
     # ParaView does not support ARM CPU yet.
-  - name: OpenChemistry-Paraview
+  - name: Paraview
     buildsystem: cmake
     builddir: true
     config-opts:
@@ -278,17 +301,17 @@ modules:
       - -DCMAKE_CXX_STANDARD_REQUIRED:BOOL=ON
       - -DPARAVIEW_ENABLE_LOOKINGGLASS:BOOL=OFF
       - -DPARAVIEW_PLUGIN_ENABLE_LookingGlass:BOOL=OFF
-      #- -DVTK_SMP_IMPLEMENTATION_TYPE:STRING=${VTK_SMP_IMPLEMENTATION_TYPE}
-      #- -DHoloPlayCore_INCLUDE_DIR:PATH=${HoloPlayCore_INCLUDE_DIR}
-      #- -DHoloPlayCore_LIBRARY:PATH=${HoloPlayCore_LIBRARY}
       - -DCMAKE_INSTALL_NAME_DIR=/app/lib
     post-install:
       - rm -r ${FLATPAK_DEST}/share/icons/hicolor/*/apps/paraview.png
       - rm -r ${FLATPAK_DEST}/share/applications/org.paraview.ParaView.desktop
+    cleanup:
+      - /bin
+      - /share
     sources:
       - type: archive
-        url: https://www.paraview.org/files/v5.9/ParaView-v5.9.0.tar.gz
-        sha256: f96c9c996903b295dcfb7db689411d1d0e6a3ccaeb6935c70deb8cc9e5e657c6
+        url: https://www.paraview.org/files/v5.11/ParaView-v5.11.1.tar.gz
+        sha256: de32f3e576b5f639ffc6903aa9e4cd46ac30c753185edc4366a7f305a6951b16
         # There is issue with flathub bot not able to clone paraview fork from openchemistry.
         # https://github.com/flathub/backend/issues/50
         # So use upstream paraview and apply any change with patch.
