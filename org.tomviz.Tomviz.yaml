@@ -89,131 +89,8 @@ modules:
           project-id: 2540
           url-template: https://github.com/xianyi/OpenBLAS/archive/v$version.tar.gz
 
-  # - name: lapack
-  #   buildsystem: cmake-ninja
-  #   builddir: true
-  #   config-opts:
-  #     - -DCMAKE_BUILD_TYPE=Release
-  #     - -DBUILD_SHARED_LIBS=ON
-  #     - -DBUILD_TESTING=OFF
-  #     - -DLAPACKE=ON
-  #     - -DCBLAS=ON
-  #   sources:
-  #     - type: archive
-  #       url: https://github.com/Reference-LAPACK/lapack/archive/refs/tags/v3.11.0.tar.gz
-  #       sha256: 4b9ba79bfd4921ca820e83979db76ab3363155709444a787979e81c22285ffa9
-  #       x-checker-data:
-  #         type: anitya
-  #         project-id: 1534
-  #         stable-only: true
-  #         url-template: https://github.com/Reference-LAPACK/lapack/archive/refs/tags/v$version.tar.gz
-  #   cleanup:
-  #     - /lib/cmake
-
       # python3 flatpak-pip-generator tomli setuptools_scm_git_archive setuptools_scm pybind11 numpy certifi pyparsing packaging cppy meson-python pythran scipy pyFFTW -o python_deps
   - python_deps.json
-  # - name: pybind11
-  #   buildsystem: simple
-  #   build-commands:
-  #     - python3.8 setup.py build
-  #     - cmake -DPYBIND11_INSTALL=ON -DPYBIND11_TEST=OFF .
-  #     - cmake --build .
-  #     - python3.8 setup.py install --skip-build --force --prefix=/app
-  #   sources:
-  #     - type: archive
-  #       url: https://github.com/pybind/pybind11/archive/v2.6.2.tar.gz
-  #       sha256: 8ff2fff22df038f5cd02cea8af56622bc67f5b64534f1b83b9f133b8366acff2
-
-  # - name: python-numpy
-  #   buildsystem: simple
-  #   build-commands:
-  #     - rm pyproject.toml
-  #     - python3 setup.py install --prefix=${FLATPAK_DEST} --root=/ --optimize=1
-  #   sources:
-  #     - type: archive
-  #       url: https://files.pythonhosted.org/packages/64/4a/b008d1f8a7b9f5206ecf70a53f84e654707e7616a771d84c05151a4713e9/numpy-1.22.3.zip
-  #       sha256: dbc7601a3b7472d559dc7b933b18b4b66f9aa7452c120e87dfb33d02008c8a18
-  #       x-checker-data:
-  #         type: pypi
-  #         name: numpy
-
-  # - name: python-scipy
-  #   buildsystem: simple
-  #   build-commands:
-  #     - python3 setup.py build -j 0
-  #     - python3 setup.py install --prefix=/app --root=/ --optimize=1
-  #   build-options:
-  #     env:
-  #       ATLAS: None
-  #       BLAS: /app/lib
-  #       LAPACK: /app/lib
-  #       LDFLAGS: -shared
-  #   sources:
-  #     - type: archive
-  #       url: https://files.pythonhosted.org/packages/b4/a2/4faa34bf0cdbefd5c706625f1234987795f368eb4e97bde9d6f46860843e/scipy-1.8.0.tar.gz
-  #       sha256: 31d4f2d6b724bc9a98e527b5849b8a7e589bf1ea630c33aa563eda912c9ff0bd
-  #       x-checker-data:
-  #         type: pypi
-  #         name: scipy
-  #   modules:
-  #     - name: python-gast
-  #       buildsystem: simple
-  #       build-commands:
-  #         - python3 setup.py install --prefix=${FLATPAK_DEST} --root=/ --optimize=1
-  #       sources:
-  #         - type: archive
-  #           url: https://files.pythonhosted.org/packages/48/a3/0bd844c54ae8141642088b7ae09dd38fec2ec7faa9b7d25bb6a23c1f266f/gast-0.5.3.tar.gz
-  #           sha256: cfbea25820e653af9c7d1807f659ce0a0a9c64f2439421a7bba4f0983f532dea
-  #           x-checker-data:
-  #             type: pypi
-  #             name: gast
-  #     - name: python-pythran
-  #       buildsystem: simple
-  #       build-commands:
-  #         - python3 setup.py install --prefix=${FLATPAK_DEST} --root=/ --optimize=1
-  #       sources:
-  #         - type: archive
-  #           url: https://files.pythonhosted.org/packages/c6/e6/986a967dcca91d89e36f4d4a2f69a052030bce01a7cd48a6b7fba1a50189/pythran-0.9.12.post1.tar.gz
-  #           sha256: e7589cf83b0befa9a1b55e98223caf89aff887d9e3f14be912cf8703a717f185
-  #         - type: patch
-  #           path: remove_pytest-runner.patch
-  #           x-checker-data:
-  #             type: pypi
-  #             name: pythran
-  #     - name: python-beniget
-  #       buildsystem: simple
-  #       build-commands:
-  #         - python3 setup.py install --prefix=${FLATPAK_DEST} --root=/ --optimize=1
-  #       sources:
-  #         - type: archive
-  #           url: https://files.pythonhosted.org/packages/14/e7/50cbac38f77eca8efd39516be6651fdb9f3c4c0fab8cf2cf05f612578737/beniget-0.4.1.tar.gz
-  #           sha256: 75554b3b8ad0553ce2f607627dad3d95c60c441189875b98e097528f8e23ac0c
-  #           x-checker-data:
-  #             type: pypi
-  #             name: beniget
-  #     - name: python-ply
-  #       buildsystem: simple
-  #       build-commands:
-  #         - python3 setup.py install --prefix=${FLATPAK_DEST} --root=/ --optimize=1
-  #       sources:
-  #         - type: archive
-  #           url: https://files.pythonhosted.org/packages/e5/69/882ee5c9d017149285cab114ebeab373308ef0f874fcdac9beb90e0ac4da/ply-3.11.tar.gz
-  #           sha256: 00c7c1aaa88358b9c765b6d3000c6eec0ba42abca5351b095321aef446081da3
-  #           x-checker-data:
-  #             type: pypi
-  #             name: ply
-
-  # - name: python-FFTW
-  #   buildsystem: simple
-  #   build-commands:
-  #     - python3 setup.py install --prefix=/app --root=/ --optimize=1
-  #   sources:
-  #     - type: archive
-  #       url: https://files.pythonhosted.org/packages/18/a1/5eb99c183af0a49bf632fed3260a6cad3f7978bb19fd661a573d3728a986/pyFFTW-0.13.0.tar.gz
-  #       sha256: da85102405c0bd95d57eb19e99b01a0729d8406cb204c3900894b873784253da
-  #       x-checker-data:
-  #         type: pypi
-  #         name: pyFFTW
 
   - name: TBB
     buildsystem: cmake
@@ -294,7 +171,7 @@ modules:
       - -DPARAVIEW_ENABLE_COMMANDLINE_TOOLS:BOOL=OFF
       - -DPARAVIEW_ENABLE_WEB:BOOL=ON
       - -DPARAVIEW_USE_QTHELP:BOOL=OFF
-      - -DPARAVIEW_USE_VTKM:BOOL=OFF
+      - -DPARAVIEW_USE_VTKM:BOOL=ON
       - -DPARAVIEW_PLUGINS_DEFAULT:BOOL=OFF
       - -DPARAVIEW_ENABLE_KITS:BOOL=ON
       - -DPARAVIEW_ENABLE_FFMPEG:BOOL=ON
@@ -340,8 +217,6 @@ modules:
       - -DITK_WRAP_rgba_unsigned_char:BOOL=OFF
       - -DITK_BUILD_DEFAULT_MODULES:BOOL=OFF
       - -DITKGroup_Core:BOOL=ON
-      - -DITKGroup_Filtering:BOOL=ON
-      - -DITKGroup_Segmentation:BOOL=ON
       - -DITKGroup_Nonunit:BOOL=ON
       - -DPython_ADDITIONAL_VERSIONS:STRING=3
       - -DITK_WRAP_PYTHON:BOOL=ON
@@ -353,14 +228,14 @@ modules:
       - -DITK_USE_SYSTEM_SWIG:BOOL=ON
       - -DITK_USE_SYSTEM_VXL:BOOL=OFF
       - -DITK_FORBID_DOWNLOADS=ON
-      - -DCMAKE_VERBOSE_MAKEFILE=ON
+      - -DPY_SITE_PACKAGES_PATH:STRING=/app/lib/python3.10/site-packages
     sources:
-      - type: git
-        url: https://github.com/InsightSoftwareConsortium/ITK
-        commit: 2338bdc487feaace8bbfd7e6a6d7a8881f7ccab6
-      # - type: archive
-      #   url: https://github.com/InsightSoftwareConsortium/ITK/archive/refs/tags/v5.3.0.tar.gz
-      #   sha256: 64e7e8094a5023c8f68ee042459d6319581fadb35e2fe90a4ae230ce36369db1
+      # - type: git
+      #   url: https://github.com/InsightSoftwareConsortium/ITK
+      #   commit: 2338bdc487feaace8bbfd7e6a6d7a8881f7ccab6
+      - type: archive
+        url: https://github.com/InsightSoftwareConsortium/ITK/archive/refs/tags/v5.3.0.tar.gz
+        sha256: 64e7e8094a5023c8f68ee042459d6319581fadb35e2fe90a4ae230ce36369db1
         x-checker-data:
           type: anitya
           project-id: 223473
@@ -372,6 +247,10 @@ modules:
     builddir: true
     config-opts:
       - -DCMAKE_BUILD_TYPE:STRING=Release
+    post-install:
+      - install -Dm0644 $FLATPAK_ID.metainfo.xml ${FLATPAK_DEST}/share/metainfo/$FLATPAK_ID.metainfo.xml
+      - install -Dm0644 ../tomviz/icons/tomviz.png ${FLATPAK_DEST}/share/icons/hicolor/128x128/apps/$FLATPAK_ID.png
+      - install -Dm0644 $FLATPAK_ID.desktop ${FLATPAK_DEST}/share/applications/$FLATPAK_ID.desktop
     sources:
       - type: archive
         url: https://github.com/OpenChemistry/tomviz/releases/download/1.10.0/tomviz-1.10.0.tar.gz
@@ -381,17 +260,21 @@ modules:
           project-id: 223480
           stable-only: true
           url-template: https://github.com/OpenChemistry/tomviz/releases/download/$version/tomviz-$version.tar.gz
-
-  - name: Tomviz-metainfo-desktopfile-icon
-    buildsystem: simple
-    build-commands:
-      - install -Dm0644 $FLATPAK_ID.metainfo.xml ${FLATPAK_DEST}/share/metainfo/$FLATPAK_ID.metainfo.xml
-      - install -Dm0644 $FLATPAK_ID.png ${FLATPAK_DEST}/share/icons/hicolor/128x128/apps/$FLATPAK_ID.png
-      - install -Dm0644 $FLATPAK_ID.desktop ${FLATPAK_DEST}/share/applications/$FLATPAK_ID.desktop
-    sources:
       - type: file
         path: org.tomviz.Tomviz.metainfo.xml
       - type: file
-        path: org.tomviz.Tomviz.png
-      - type: file
         path: org.tomviz.Tomviz.desktop
+
+  # - name: Tomviz-metainfo-desktopfile-icon
+  #   buildsystem: simple
+  #   build-commands:
+  #     - install -Dm0644 $FLATPAK_ID.metainfo.xml ${FLATPAK_DEST}/share/metainfo/$FLATPAK_ID.metainfo.xml
+  #     - install -Dm0644 $FLATPAK_ID.png ${FLATPAK_DEST}/share/icons/hicolor/128x128/apps/$FLATPAK_ID.png
+  #     - install -Dm0644 $FLATPAK_ID.desktop ${FLATPAK_DEST}/share/applications/$FLATPAK_ID.desktop
+  #   sources:
+  #     - type: file
+  #       path: org.tomviz.Tomviz.metainfo.xml
+  #     - type: file
+  #       path: org.tomviz.Tomviz.png
+  #     - type: file
+  #       path: org.tomviz.Tomviz.desktop
