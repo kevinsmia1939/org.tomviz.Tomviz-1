@@ -272,34 +272,8 @@ modules:
       - type: archive
         url: https://www.paraview.org/files/v5.12/ParaView-v5.12.1.tar.gz
         sha256: 5b3c778dd6c77a75cdfd3fd514f279e08c902325a42ec49865e1f62f2671a969
-      # - type: archive
-      #   url: https://www.paraview.org/files/v5.10/ParaView-v5.10.1.tar.gz
-      #   sha256: 59ca46a929a52d8abec107b72e19447cba3d8e64871b6fbc8e99b0f3b167db46
-      # - type: git
-      #   url: https://github.com/OpenChemistry/ParaView
-      #   commit: 6f7d870595bf68b02dcf63c1a56adf6eb53dd2f1
-        # x-checker-data:
-        #   type: anitya
-        #   project-id: 9602
-        #   stable-only: true
-        #   url-template: https://www.paraview.org/files/v$major.$minor/ParaView-v$version.tar.gz
-        # There is issue with flathub bot not able to clone paraview fork from openchemistry.
-        # https://github.com/flathub/backend/issues/50
-        # So use upstream paraview and apply any change with patch.
-      #- type: patch
-        #path: apply-openchemistry-paraview.patch
 
   - name: SWIG2
-    # config-opts:
-    #   - --without-pcre
-    #   - --disable-ccache
-    #   - --without-tcl
-    #   - --without-tcl
-    #   - --without-perl5
-    #   - --without-octave
-    #   - --without-scilab
-    #   - --without-java
-    #   - --without-ruby
     buildsystem: cmake
     sources:
       - type: git
@@ -330,7 +304,7 @@ modules:
       - -DITK_USE_SYSTEM_SWIG:BOOL=ON
       - -DITK_USE_SYSTEM_VXL:BOOL=OFF
       - -DITK_FORBID_DOWNLOADS=ON
-      # - -DPY_SITE_PACKAGES_PATH:STRING=/app/lib/python3.11/site-packages
+      - -DPY_SITE_PACKAGES_PATH:STRING=/app/lib/python3.11/site-packages
     sources:
       - type: archive
         url: https://github.com/InsightSoftwareConsortium/ITK/archive/refs/tags/v5.4.0.tar.gz
@@ -341,25 +315,47 @@ modules:
           stable-only: true
           url-template: https://github.com/InsightSoftwareConsortium/ITK/archive/refs/tags/v$version.tar.gz
 
+  - name: pybind11
+    buildsystem: cmake-ninja
+    builddir: true
+    config-opts:
+      - -DPYBIND11_INSTALL:BOOL=ON
+      - -DPYBIND11_TEST:BOOL=OFF
+      - -DPYTHON_INCLUDE_DIRS=/usr/include/python3.11
+    sources:
+      - type: git
+        url: https://github.com/pybind/pybind11
+        tag: v2.13.0
+        # commit: 3e9dfa2866941655c56877882565e7577de6fc7b
+        x-checker-data:
+          type: git
+          tag-pattern: ^v?([\d.]+)$
+
   - name: Tomviz
     buildsystem: cmake
     builddir: true
     config-opts:
       - -DCMAKE_BUILD_TYPE:STRING=Release
       - -DTOMVIZ_DOWNLOAD_WEB=OFF
+      - -DPYBIND11_INCLUDE_DIR:INTERNAL=/app/include
     post-install:
       - install -Dm0644 $FLATPAK_ID.metainfo.xml ${FLATPAK_DEST}/share/metainfo/$FLATPAK_ID.metainfo.xml
       - install -Dm0644 ../tomviz/icons/tomviz.png ${FLATPAK_DEST}/share/icons/hicolor/128x128/apps/$FLATPAK_ID.png
       - install -Dm0644 $FLATPAK_ID.desktop ${FLATPAK_DEST}/share/applications/$FLATPAK_ID.desktop
     sources:
-      - type: archive
-        url: https://github.com/OpenChemistry/tomviz/releases/download/1.10.0/tomviz-1.10.0.tar.gz
-        sha256: be7510dd5068f30d8334546382b58c4b2e15e04cb60288d29b560f45f6c60209
-        x-checker-data:
-          type: anitya
-          project-id: 223480
-          stable-only: true
-          url-template: https://github.com/OpenChemistry/tomviz/releases/download/$version/tomviz-$version.tar.gz
+      - type: git
+        url: https://github.com/OpenChemistry/tomviz
+        tag: 1.10.0
+        disable-submodules: true
+        # x-checker-data:
+        #   type: anitya
+        #   project-id: 223480
+        #   stable-only: true
+        #   url-template: https://github.com/OpenChemistry/tomviz/releases/download/$version/tomviz-$version.tar.gz
+      - type: git
+        url: https://github.com/pybind/pybind11
+        tag: v2.13.0
+        dest: thirdparty/pybind11
       - type: file
         path: org.tomviz.Tomviz.metainfo.xml
       - type: file
