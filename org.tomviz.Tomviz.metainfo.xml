@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component type="desktop">
+<component type="desktop-application">
     <id>org.tomviz.Tomviz</id>
     <launchable type="desktop-id">org.tomviz.Tomviz.desktop</launchable>
     <name>Tomviz</name>
@@ -16,36 +16,40 @@
             SciPy tools to allow advanced data processing and analysis.
         </p>
     </description>
-    <url type="homepage">https://tomviz.org/</url>
+    <developer id="org.tomviz">
+        <name>Tomviz</name>
+    </developer>
+    <url type="homepage">https://tomviz.org</url>
     <url type="help">https://tomviz.org/docs/</url>
     <url type="bugtracker">https://github.com/openchemistry/tomviz/issues</url>
+    <url type="vcs-browser">https://github.com/openchemistry/tomviz/</url>
     <screenshots>
         <screenshot type="default">
-            <image>https://tomviz.readthedocs.io/en/latest/img/tomviz_screenshot.png</image>
+            <image>https://dl.flathub.org/repo/screenshots/org.tomviz.Tomviz-stable/1504x846/org.tomviz.Tomviz-8d2ee9df0850fc6df9a8e3d0a9579330.webp</image>
         </screenshot>
         <screenshot>
-            <image>https://tomviz.readthedocs.io/en/latest/img/tomviz_start_end_pipeline.png</image>
+            <image>https://dl.flathub.org/repo/screenshots/org.tomviz.Tomviz-stable/1504x846/org.tomviz.Tomviz-ed395dd3b428069f23e712b94602816f.webp</image>
         </screenshot>
         <screenshot>
-            <image>https://tomviz.readthedocs.io/en/latest/img/default_view.png</image>
+            <image>https://dl.flathub.org/repo/screenshots/org.tomviz.Tomviz-stable/1504x846/org.tomviz.Tomviz-688d043d30488e00ed8001f14b5433d7.webp</image>
         </screenshot>
         <screenshot>
-            <image>https://tomviz.readthedocs.io/en/latest/img/contour_color_by.png</image>
+            <image>https://dl.flathub.org/repo/screenshots/org.tomviz.Tomviz-stable/1248x702/org.tomviz.Tomviz-d4d1f1ec70edf463edfbf385aa1b374c.webp</image>
         </screenshot>
         <screenshot>
-            <image>https://tomviz.readthedocs.io/en/latest/img/outline.png</image>
+            <image>https://dl.flathub.org/repo/screenshots/org.tomviz.Tomviz-stable/752x423/org.tomviz.Tomviz-91fbb5c750a81a9e8eb17d51581a329c.webp</image>
         </screenshot>
         <screenshot>
-            <image>https://tomviz.readthedocs.io/en/latest/img/inverted_clip_plane.png</image>
+            <image>https://dl.flathub.org/repo/screenshots/org.tomviz.Tomviz-stable/1248x702/org.tomviz.Tomviz-773fd5d2daec2cf9e9b23a6743d78077.webp</image>
         </screenshot>
         <screenshot>
-            <image>https://tomviz.readthedocs.io/en/latest/img/brightness_and_contrast_auto.png</image>
+            <image>https://dl.flathub.org/repo/screenshots/org.tomviz.Tomviz-stable/1504x846/org.tomviz.Tomviz-738c59bd54d4f14b3c0d79c4e1f27f1a.webp</image>
         </screenshot>
         <screenshot>
-            <image>https://tomviz.readthedocs.io/en/latest/img/tilt_axis_dialog.png</image>
+            <image>https://dl.flathub.org/repo/screenshots/org.tomviz.Tomviz-stable/1504x846/org.tomviz.Tomviz-963495233862e855a7339b6d550ef275.webp</image>
         </screenshot>
         <screenshot>
-            <image>https://tomviz.readthedocs.io/en/latest/img/tilt_axis_color.png</image>
+            <image>https://dl.flathub.org/repo/screenshots/org.tomviz.Tomviz-stable/1504x846/org.tomviz.Tomviz-773382a332c5d33783d89dfdd1b554cd.webp</image>
         </screenshot>
     </screenshots>
     <content_rating type="oars-1.1"/>
